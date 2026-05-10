@@ -1,5 +1,5 @@
 from supabase import create_client, Client
-from flask import Flask, redirect
+from flask import Flask, jsonify, redirect, request
 import os
 from dotenv import load_dotenv
 
@@ -21,22 +21,30 @@ def conectDB() -> Client:
 supabase = conectDB()
 
 
-@app.route('/')
-def seed():
+@app.route("/produtos", methods=["POST"])
+def cadastrar_produto():
 
-    categorias = [
-    ]
+    dados = request.json
 
-    response = supabase.table("categorias").insert(categorias).execute()
+    nome = dados['nome']
+    descricao = dados['descricao']
+    preco = dados['preco']
+    imagem_url = dados['imagem_url']
 
-    return {
-        "mensagem": "Inserido",
-        "dados": response.data
-    }
+    supabase.table("produtos").insert({
+        "nome": nome,
+        "descricao": descricao,
+        "preco": preco,
+        "imagem_url": imagem_url
+    }).execute()
+
+    return jsonify({
+        "mensagem": "Produto cadastrado com sucesso"
+    })
 
 
 
 
 if __name__ == '__main__':
-    conectDB()
+    supabase = conectDB()
     app.run(debug=True)
