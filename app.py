@@ -14,10 +14,11 @@ print(f"SUPABASE_URL: {'Carregado' if os.getenv('SUPABASE_URL') else 'NÃO CARRE
 print(f"SUPABASE_KEY: {'Carregado' if os.getenv('SUPABASE_KEY') else 'NÃO CARREGADO'}")
 print(f"-----------------")
 
+
 app = Flask(__name__)
 app.register_blueprint(produtos_bp)
 app.register_blueprint(itemCardapio_bp)
-
+app.register_blueprint(mesas_bp)
 
 if __name__ == '__main__':
     app.run(debug=True)
