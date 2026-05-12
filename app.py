@@ -3,8 +3,8 @@ from flask import Flask, jsonify, redirect, request
 import os
 from dotenv import load_dotenv
 from routes.produtos.produtos import produtos_bp
-from routes.mesas.mesas import mesas_bp
-
+from routes.produtos.cardapio.itemCardapio import itemCardapio_bp
+from database import supabase
 
 load_dotenv()
 
@@ -17,22 +17,8 @@ print(f"-----------------")
 
 app = Flask(__name__)
 app.register_blueprint(produtos_bp)
+app.register_blueprint(itemCardapio_bp)
 app.register_blueprint(mesas_bp)
 
-
-def conectDB() -> Client:
-    url = os.getenv("SUPABASE_URL")
-    key = os.getenv("SUPABASE_KEY")
-
-    if not url or not key:
-        raise ValueError("SUPABASE_URL e SUPABASE_KEY precisam estar definidos no .env")
-
-    supabase: Client = create_client(url, key)
-    return supabase
-
-supabase = conectDB()
-
-
 if __name__ == '__main__':
-    supabase = conectDB()
     app.run(debug=True)
