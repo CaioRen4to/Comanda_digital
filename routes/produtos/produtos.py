@@ -1,24 +1,24 @@
+from flask import Blueprint, request, jsonify
 from supabase import create_client, Client
-from flask import Flask, app, jsonify, redirect, request
 import os
-import supabase
 
+produtos_bp = Blueprint('produtos', __name__)
 
-@app.route("/produtos", methods=["POST"])
+def get_supabase():
+    url = os.getenv("SUPABASE_URL")
+    key = os.getenv("SUPABASE_KEY")
+    return create_client(url, key)
+
+@produtos_bp.route("/produtos", methods=["POST"])
 def cadastrar_produto():
 
     dados = request.json
 
-    nome = dados['nome']
-    descricao = dados['descricao']
-    preco = dados['preco']
-    imagem_url = dados['imagem_url']
-
     supabase.table("produtos").insert({
-        "nome": nome,
-        "descricao": descricao,
-        "preco": preco,
-        "imagem_url": imagem_url
+        "nome": dados['nome'],
+        "descricao": dados['descricao'],
+        "preco": dados['preco'],
+        "imagem_url": dados['imagem_url']
     }).execute()
 
     return jsonify({

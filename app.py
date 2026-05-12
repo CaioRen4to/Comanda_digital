@@ -2,13 +2,18 @@ from supabase import create_client, Client
 from flask import Flask, jsonify, redirect, request
 import os
 from dotenv import load_dotenv
-from routes.produtos import produtos
+from routes.produtos.produtos import produtos_bp
 
 load_dotenv()
 
-app = Flask(__name__)
-app.register_blueprint(produtos)
+# Teste de leitura do .env
+print(f"--- DEBUG ENV ---")
+print(f"SUPABASE_URL: {'Carregado' if os.getenv('SUPABASE_URL') else 'NÃO CARREGADO'}")
+print(f"SUPABASE_KEY: {'Carregado' if os.getenv('SUPABASE_KEY') else 'NÃO CARREGADO'}")
+print(f"-----------------")
 
+app = Flask(__name__)
+app.register_blueprint(produtos_bp)
 
 def conectDB() -> Client:
     url = os.getenv("SUPABASE_URL")
@@ -21,8 +26,6 @@ def conectDB() -> Client:
     return supabase
 
 supabase = conectDB()
-
-
 
 
 if __name__ == '__main__':
