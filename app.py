@@ -2,10 +2,12 @@ from supabase import create_client, Client
 from flask import Flask, jsonify, redirect, request
 import os
 from dotenv import load_dotenv
+from routes.produtos import produtos
 
 load_dotenv()
 
 app = Flask(__name__)
+app.register_blueprint(produtos)
 
 
 def conectDB() -> Client:
