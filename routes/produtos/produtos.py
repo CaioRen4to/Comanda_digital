@@ -1,6 +1,8 @@
 from flask import Blueprint, request, jsonify
 from supabase import create_client, Client
 import os
+import supabase
+
 
 produtos_bp = Blueprint('produtos', __name__)
 

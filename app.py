@@ -3,6 +3,8 @@ from flask import Flask, jsonify, redirect, request
 import os
 from dotenv import load_dotenv
 from routes.produtos.produtos import produtos_bp
+from routes.mesas.mesas import mesas_bp
+
 
 load_dotenv()
 
@@ -12,8 +14,11 @@ print(f"SUPABASE_URL: {'Carregado' if os.getenv('SUPABASE_URL') else 'NÃO CARRE
 print(f"SUPABASE_KEY: {'Carregado' if os.getenv('SUPABASE_KEY') else 'NÃO CARREGADO'}")
 print(f"-----------------")
 
+
 app = Flask(__name__)
 app.register_blueprint(produtos_bp)
+app.register_blueprint(mesas_bp)
+
 
 def conectDB() -> Client:
     url = os.getenv("SUPABASE_URL")
