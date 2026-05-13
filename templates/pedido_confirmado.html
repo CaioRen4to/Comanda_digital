@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedido Confirmado — Mesa {{ mesa.numero }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f0e0c;
+            --surface: #1a1815;
+            --card: #221f1b;
+            --border: #2e2b26;
+            --gold: #c9a84c;
+            --gold-light: #e8c96a;
+            --text: #f0ebe3;
+            --muted: #8a8278;
+            --success: #2ecc71;
+            --success-dark: #1a7a42;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 40px;
+        }
+
+        /* Header */
+        .header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .mesa-badge {
+            background: var(--gold);
+            color: #0f0e0c;
+            font-weight: 700;
+            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        /* Animação de check */
+        .success-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 48px 20px 32px;
+            text-align: center;
+        }
+
+        .check-circle {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--success), var(--success-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 0 40px rgba(46, 204, 113, 0.25);
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0); opacity: 0; }
+            to   { transform: scale(1); opacity: 1; }
+        }
+
+        .check-icon {
+            font-size: 42px;
+            animation: fadeIn 0.3s ease 0.3s both;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.5); }
+            to   { opacity: 1; transform: scale(1); }
+        }
+
+        .success-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 8px;
+            animation: slideUp 0.4s ease 0.2s both;
+        }
+
+        .success-sub {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.6;
+            animation: slideUp 0.4s ease 0.3s both;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Número do pedido */
+        .pedido-id {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px 24px;
+            margin: 20px 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            animation: slideUp 0.4s ease 0.35s both;
+        }
+
+        .pedido-id-label {
+            font-size: 12px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .pedido-id-valor {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        /* Status do pedido */
+        .status-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            margin: 16px 20px 0;
+            padding: 20px;
+            animation: slideUp 0.4s ease 0.4s both;
+        }
+
+        .status-titulo {
+            font-size: 12px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 16px;
+        }
+
+        .status-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .status-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            position: relative;
+        }
+
+        .status-step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 32px;
+            width: 2px;
+            height: 28px;
+            background: var(--border);
+        }
+
+        .status-step.ativo::after { background: var(--gold); }
+
+        .step-dot {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+            background: var(--surface);
+            margin-bottom: 24px;
+        }
+
+        .status-step.ativo .step-dot {
+            border-color: var(--gold);
+            background: var(--gold);
+            color: #0f0e0c;
+            animation: pulse 1.5s ease infinite;
+        }
+
+        .status-step.feito .step-dot {
+            border-color: var(--success);
+            background: var(--success);
+            color: white;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(201, 168, 76, 0.4); }
+            50%       { box-shadow: 0 0 0 8px rgba(201, 168, 76, 0); }
+        }
+
+        .step-info { padding-top: 4px; }
+
+        .step-nome {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 2px;
+        }
+
+        .status-step:not(.ativo):not(.feito) .step-nome { color: var(--muted); }
+
+        .step-desc {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        /* Resumo do pedido */
+        .resumo-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            margin: 16px 20px 0;
+            padding: 20px;
+            animation: slideUp 0.4s ease 0.45s both;
+        }
+
+        .resumo-titulo {
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            color: var(--gold-light);
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .resumo-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+        }
+
+        .resumo-item:last-of-type { border-bottom: none; }
+
+        .item-nome { font-weight: 500; color: var(--text); }
+        .item-obs  { font-size: 11px; color: var(--muted); margin-top: 2px; }
+        .item-qty  { font-size: 12px; color: var(--muted); }
+
+        .item-preco {
+            font-weight: 600;
+            color: var(--gold);
+            white-space: nowrap;
+            margin-left: 12px;
+        }
+
+        .resumo-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 14px;
+            margin-top: 4px;
+            border-top: 1px solid var(--border);
+        }
+
+        .total-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .total-valor {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        /* Botões de ação */
+        .acoes {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 20px 20px 0;
+            animation: slideUp 0.4s ease 0.5s both;
+        }
+
+        .btn-voltar {
+            background: transparent;
+            border: 1.5px solid var(--gold);
+            color: var(--gold);
+            border-radius: 12px;
+            padding: 15px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+            transition: all 0.2s;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .btn-voltar:hover { background: var(--gold); color: #0f0e0c; }
+
+        .btn-conta {
+            background: var(--surface);
+            border: 1.5px solid var(--border);
+            color: var(--muted);
+            border-radius: 12px;
+            padding: 15px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+            transition: all 0.2s;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .btn-conta:hover { border-color: var(--muted); color: var(--text); }
+
+        /* Info de espera */
+        .info-espera {
+            margin: 20px 20px 0;
+            background: rgba(201, 168, 76, 0.08);
+            border: 1px solid rgba(201, 168, 76, 0.2);
+            border-radius: 12px;
+            padding: 14px 16px;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            animation: slideUp 0.4s ease 0.55s both;
+        }
+
+        .info-espera-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+
+        .info-espera-texto {
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .info-espera-texto strong { color: var(--gold-light); }
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+    <span class="mesa-badge">Mesa {{ mesa.numero }}</span>
+    <span class="logo">Comanda</span>
+    <div style="width: 80px;"></div>
+</div>
+
+<!-- Confirmação -->
+<div class="success-section">
+    <div class="check-circle">
+        <span class="check-icon">✓</span>
+    </div>
+    <h1 class="success-title">Pedido Enviado!</h1>
+    <p class="success-sub">Seu pedido foi recebido com sucesso.<br>A cozinha já foi notificada.</p>
+</div>
+
+<!-- ID do pedido -->
+<div class="pedido-id">
+    <div>
+        <div class="pedido-id-label">Número do Pedido</div>
+    </div>
+    <div class="pedido-id-valor">#{{ pedido_id }}</div>
+</div>
+
+<!-- Status do pedido -->
+<div class="status-card">
+    <div class="status-titulo">Acompanhe seu pedido</div>
+    <div class="status-steps">
+        <div class="status-step feito">
+            <div class="step-dot">✓</div>
+            <div class="step-info">
+                <div class="step-nome">Pedido recebido</div>
+                <div class="step-desc">Seu pedido chegou ao sistema</div>
+            </div>
+        </div>
+        <div class="status-step ativo">
+            <div class="step-dot">🍳</div>
+            <div class="step-info">
+                <div class="step-nome">Em preparo</div>
+                <div class="step-desc">A cozinha está preparando seu pedido</div>
+            </div>
+        </div>
+        <div class="status-step">
+            <div class="step-dot">🛎️</div>
+            <div class="step-info">
+                <div class="step-nome">A caminho da mesa</div>
+                <div class="step-desc">O garçom vai trazer seu pedido</div>
+            </div>
+        </div>
+        <div class="status-step">
+            <div class="step-dot">✅</div>
+            <div class="step-info">
+                <div class="step-nome">Entregue</div>
+                <div class="step-desc">Bom apetite!</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Resumo do pedido -->
+<div class="resumo-card">
+    <div class="resumo-titulo">Resumo do Pedido</div>
+
+    {% for item in itens %}
+    <div class="resumo-item">
+        <div>
+            <div class="item-nome">{{ item.nome }}</div>
+            {% if item.observacao %}
+            <div class="item-obs">Obs: {{ item.observacao }}</div>
+            {% endif %}
+            <div class="item-qty">{{ item.quantidade }}x • R$ {{ "%.2f"|format(item.preco_unitario) }}</div>
+        </div>
+        <div class="item-preco">R$ {{ "%.2f"|format(item.subtotal) }}</div>
+    </div>
+    {% endfor %}
+
+    <div class="resumo-total">
+        <span class="total-label">Total</span>
+        <span class="total-valor">R$ {{ "%.2f"|format(valor_total) }}</span>
+    </div>
+</div>
+
+<!-- Info de espera -->
+<div class="info-espera">
+    <span class="info-espera-icon">💡</span>
+    <div class="info-espera-texto">
+        <strong>Quer pedir mais alguma coisa?</strong> Você pode voltar ao cardápio e fazer um novo pedido a qualquer momento. Quando quiser fechar a conta, clique no botão abaixo.
+    </div>
+</div>
+
+<!-- Botões de ação -->
+<div class="acoes">
+    <a href="/mesa/{{ mesa.qr_code_token }}" class="btn-voltar">
+        + Pedir mais itens
+    </a>
+    <a href="/mesa/{{ mesa.qr_code_token }}/conta" class="btn-conta">
+        Fechar conta
+    </a>
+</div>
+
+</body>
+</html>

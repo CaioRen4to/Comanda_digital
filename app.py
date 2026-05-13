@@ -4,12 +4,14 @@ from dotenv import load_dotenv
 from routes.produtos.produtos import produtos_bp
 from routes.produtos.cardapio.itemCardapio import itemCardapio_bp
 from routes.mesas.mesas import mesas_bp
+from routes.pedido_feito.realizar_pedido import pedidos_realizado_bp
 from database import supabase
 
 
 load_dotenv()
 
 app = Flask(__name__)
+app.register_blueprint(pedidos_realizado_bp)
 app.register_blueprint(produtos_bp)
 app.register_blueprint(itemCardapio_bp)
 app.register_blueprint(mesas_bp)

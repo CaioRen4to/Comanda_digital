@@ -39,12 +39,14 @@ def abrir_cardapio(token):
     if not mesa.data:
         return jsonify({"erro": "Mesa não encontrada"}), 404
     
-    produtos = supabase.table("produtos").select("*").eq('ativo', True).execute()
-    
+    produtos = supabase.table("produtos").select("*").execute()
+    categorias = supabase.table("categorias").select("*").execute()
+
     return render_template(
-        "cardapio.html", 
-        mesa=mesa.data[0], 
-        produtos=produtos.data
+        "cardapio.html",
+        mesa=mesa.data[0],
+        produtos=produtos.data or [],
+        categorias=categorias.data or [],
     )
     
     
