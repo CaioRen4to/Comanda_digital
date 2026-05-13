@@ -1,10 +1,9 @@
 from flask import Blueprint, request, jsonify
 from database import supabase
-from pip._vendor.urllib3 import response
 
 itemCardapio_bp = Blueprint('itemCardapio', __name__)
 
-@itemCardapio_bp.route("/cadastrarCardapio", mehotds=["POST"])
+@itemCardapio_bp.route("/cadastrarCardapio", methods=["POST"])
 def criar_item_cardapio():
     try:
         dados = request.json
@@ -20,12 +19,12 @@ def criar_item_cardapio():
             "nome": dados['nome'], 
             "descricao": dados.get('descricao', ''),
             "preco": dados['preco'],
-            "imagem_url": dados.get('imagem.url', ''),
+            "imagem_url": dados.get('imagem_url', ''),
             "categoria_id": dados.get('categorias_id')
         }).execute()
         
         return jsonify({
-            "mensagem": "Item cadastrado com sucesso!"
+            "mensagem": "Item cadastrado com sucesso!",
             "Item": response.data[0] if response.data else None
         }), 201
         

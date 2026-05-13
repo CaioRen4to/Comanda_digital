@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cardápio - Mesa {{ mesa.numero }}</title>
+</head>
+<body>
+    <h1>Mesa {{ mesa.numero }}</h1>
+    <h2>Cardápio</h2>
+
+    {% for produto in produtos %}
+        <div>
+            <h3>{{ produto.nome }}</h3>
+            <p>{{ produto.descricao }}</p>
+            <p>R$ {{ produto.preco }}</p>
+        </div>
+    {% endfor %}
+</body>
+</html>
