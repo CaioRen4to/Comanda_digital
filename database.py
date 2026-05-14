@@ -1,5 +1,8 @@
 from supabase import create_client, Client
+from dotenv import load_dotenv
 import os
+
+load_dotenv()
 
 """
 Cria e retorna um cliente Supabase usando variáveis de ambiente.
